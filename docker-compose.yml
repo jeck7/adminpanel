@@ -9,12 +9,10 @@ services:
       - "${PORT:-8080}:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=${DATABASE_URL:-jdbc:postgresql://db:5432/admin_panel}
-      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-postgres}
-      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-postgres123}
+      - SPRING_DATASOURCE_URL=${DATABASE_URL}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
       - JWT_SECRET=${JWT_SECRET:-4D6251655468576D5A7134743777217A25432A462D4A614E645267556B587032}
-    depends_on:
-      - db
 
   frontend:
     build:
@@ -25,18 +23,4 @@ services:
     environment:
       - VITE_API_URL=${BACKEND_URL:-http://localhost:8080}
     depends_on:
-      - backend
-
-  db:
-    image: postgres:14-alpine
-    ports:
-      - "${DB_PORT:-5432}:5432"
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB:-admin_panel}
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres123}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data: 
+      - backend 
