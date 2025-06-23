@@ -153,4 +153,4 @@ Contact us for:
 
 ---
 
-Made with ❤️ by [Your Name]
+Made with ❤️ by hristoxs@gmail.com
