@@ -1,4 +1,4 @@
-const API_BASE_URL =
+export const API_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:8080"
     : "https://adminpanel-1-95ko.onrender.com";

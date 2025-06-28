@@ -22,25 +22,33 @@ public class AdminpanelApplication {
             PasswordEncoder passwordEncoder
     ) {
         return args -> {
-            // Admin User
-            userRepository.findByEmail("admin@example.com").ifPresent(userRepository::delete);
-            User admin = new User();
-            admin.setFirstname("admin");
-            admin.setLastname("user");
-            admin.setEmail("admin@example.com");
-            admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setRole(Role.ADMIN);
-            userRepository.save(admin);
+            // Admin User - only create if doesn't exist
+            if (userRepository.findByEmail("admin@example.com").isEmpty()) {
+                User admin = new User();
+                admin.setFirstname("admin");
+                admin.setLastname("user");
+                admin.setEmail("admin@example.com");
+                admin.setPassword(passwordEncoder.encode("admin123"));
+                admin.setRole(Role.ADMIN);
+                userRepository.save(admin);
+                System.out.println("Admin user created");
+            } else {
+                System.out.println("Admin user already exists");
+            }
 
-            // Regular User for testing
-            userRepository.findByEmail("user@example.com").ifPresent(userRepository::delete);
-            User regularUser = new User();
-            regularUser.setFirstname("regular");
-            regularUser.setLastname("user");
-            regularUser.setEmail("user@example.com");
-            regularUser.setPassword(passwordEncoder.encode("user123"));
-            regularUser.setRole(Role.USER);
-            userRepository.save(regularUser);
+            // Regular User for testing - only create if doesn't exist
+            if (userRepository.findByEmail("user@example.com").isEmpty()) {
+                User regularUser = new User();
+                regularUser.setFirstname("regular");
+                regularUser.setLastname("user");
+                regularUser.setEmail("user@example.com");
+                regularUser.setPassword(passwordEncoder.encode("user123"));
+                regularUser.setRole(Role.USER);
+                userRepository.save(regularUser);
+                System.out.println("Regular user created");
+            } else {
+                System.out.println("Regular user already exists");
+            }
         };
     }
 }

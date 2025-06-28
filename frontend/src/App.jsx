@@ -6,7 +6,11 @@ import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import AdminLayout from './components/AdminLayout';
 import PromptEngineering from './pages/PromptEngineering';
+import Community from './pages/Community';
+import Profile from './pages/Profile';
 import Header from './components/Header';
+import AIAssistant from './components/AIAssistant';
+import PromptBuilder from './components/PromptBuilder';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(authService.isAuthenticated());
@@ -55,7 +59,7 @@ const AppRoutes = ({ isAuthenticated, onLogin, onLogout }) => {
       />
       <Route path="/prompt-engineering" element={
         isAuthenticated ? (
-          <AdminLayout>
+          <AdminLayout onLogout={onLogout}>
             <PromptEngineering />
           </AdminLayout>
         ) : (
@@ -71,6 +75,10 @@ const AppRoutes = ({ isAuthenticated, onLogin, onLogout }) => {
               <Routes>
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="users" element={<Users />} />
+                <Route path="ai-assistant" element={<AIAssistant />} />
+                <Route path="prompt-builder" element={<PromptBuilder />} />
+                <Route path="community" element={<Community />} />
+                <Route path="profile" element={<Profile />} />
                 <Route index element={<Navigate to="/dashboard" />} />
               </Routes>
             </AdminLayout>
