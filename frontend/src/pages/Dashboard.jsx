@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { userService } from '../services/userService';
 import { UsersIcon, UserGroupIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { getExampleUsageStats, EXAMPLES } from './PromptEngineering';
+import { exampleUsageService } from '../services/exampleUsageService';
 
 const StatCard = ({ title, value, icon, color }) => {
     const IconComponent = icon;
@@ -89,6 +91,7 @@ const Dashboard = () => {
     const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [exampleUsage, setExampleUsage] = useState({});
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -100,6 +103,10 @@ const Dashboard = () => {
                 const admins = users.filter(u => u.role === 'ADMIN').length;
                 const regularUsers = users.filter(u => u.role === 'USER').length;
                 setStats({ total, admins, users: regularUsers });
+                
+                // Fetch example usage stats from backend
+                const usageStats = await exampleUsageService.getUsageStats();
+                setExampleUsage(usageStats);
             } catch (err) {
                 setError('Could not fetch dashboard data.');
                 console.error(err);
@@ -127,7 +134,7 @@ const Dashboard = () => {
     return (
         <div>
             <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard 
                     title="Total Users" 
                     value={stats.total} 
@@ -146,11 +153,39 @@ const Dashboard = () => {
                     icon={UserGroupIcon}
                     color="border-green-500"
                 />
+                <StatCard
+                    title="Prompt Example Runs"
+                    value={Object.values(exampleUsage).reduce((a, b) => a + b, 0)}
+                    icon={UsersIcon}
+                    color="border-indigo-500"
+                />
             </div>
 
             <div className="mt-8 grid grid-cols-1 xl:grid-cols-2 gap-6">
                 <RecentUsers users={allUsers} />
                 <RolesChart data={chartData} />
+            </div>
+
+            <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
+                <h2 className="text-xl font-bold text-gray-800 mb-4">Interactive Example Usage</h2>
+                <div className="overflow-x-auto">
+                    <table className="min-w-full bg-white">
+                        <thead>
+                            <tr>
+                                <th className="py-2 px-4 border-b text-left text-sm font-medium text-gray-500">Example</th>
+                                <th className="py-2 px-4 border-b text-left text-sm font-medium text-gray-500">Runs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {Object.entries(exampleUsage).map(([idx, count]) => (
+                                <tr key={idx}>
+                                    <td className="py-2 px-4 border-b text-sm text-gray-800">{EXAMPLES[idx]?.label || `Example #${idx}`}</td>
+                                    <td className="py-2 px-4 border-b text-sm text-gray-800">{count}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

@@ -17,7 +17,7 @@ const Sidebar = ({ onLogout }) => {
   };
 
   return (
-    <div className="w-64 h-screen bg-gray-900 text-gray-300 flex flex-col font-sans">
+    <div className="w-64 min-h-screen bg-gray-900 text-gray-300 flex flex-col font-sans">
       <div className="p-4 border-b border-gray-800">
         <h2 className="text-2xl font-bold text-white">Admin Panel</h2>
       </div>
@@ -35,9 +35,15 @@ const Sidebar = ({ onLogout }) => {
               <span>Users</span>
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/prompt-engineering" className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive ? 'bg-indigo-600 text-white' : 'hover:bg-gray-800'}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zm0 10c-2.21 0-4.2-.896-5.657-2.343A7.963 7.963 0 014 12c0-2.21.896-4.2 2.343-5.657A7.963 7.963 0 0112 4c2.21 0 4.2.896 5.657 2.343A7.963 7.963 0 0120 12c0 2.21-.896 4.2-2.343 5.657A7.963 7.963 0 0112 20z" /></svg>
+              <span>Prompt Engineering</span>
+            </NavLink>
+          </li>
         </ul>
       </nav>
-      <div className="p-4 mt-auto border-t border-gray-800">
+      <div className="p-4 mt-auto border-t border-gray-800 flex flex-col flex-grow justify-end">
         {user && (
           <div className="mb-4 text-center">
             <p className="text-sm text-gray-400">Logged in as</p>

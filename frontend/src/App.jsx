@@ -5,6 +5,8 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import AdminLayout from './components/AdminLayout';
+import PromptEngineering from './pages/PromptEngineering';
+import Header from './components/Header';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(authService.isAuthenticated());
@@ -20,6 +22,7 @@ function App() {
 
   return (
     <Router>
+      <Header isAuthenticated={isAuthenticated} onLogout={handleLogout} />
       <AppRoutes
         isAuthenticated={isAuthenticated}
         onLogin={handleLogin}
@@ -32,6 +35,16 @@ function App() {
 const AppRoutes = ({ isAuthenticated, onLogin, onLogout }) => {
   const navigate = useNavigate();
 
+  // Helper for docs route
+  const PromptEngineeringDocsRoute = () =>
+    isAuthenticated ? (
+      <AdminLayout onLogout={onLogout}>
+        <PromptEngineering />
+      </AdminLayout>
+    ) : (
+      <PromptEngineering />
+    );
+
   return (
     <Routes>
       <Route
@@ -40,6 +53,16 @@ const AppRoutes = ({ isAuthenticated, onLogin, onLogout }) => {
           isAuthenticated ? <Navigate to="/dashboard" /> : <Login onLoginSuccess={onLogin} />
         }
       />
+      <Route path="/prompt-engineering" element={
+        isAuthenticated ? (
+          <AdminLayout>
+            <PromptEngineering />
+          </AdminLayout>
+        ) : (
+          <Navigate to="/login" />
+        )
+      } />
+      <Route path="/prompt-engineering-docs" element={<PromptEngineeringDocsRoute />} />
       <Route
         path="/*"
         element={
